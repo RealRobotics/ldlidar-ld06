@@ -116,7 +116,7 @@ bool LiPkg::Parse(const uint8_t * data, long len)
 		if (crc == pkg->crc8)
 		{
 			double diff = (pkg->end_angle / 100 - pkg->start_angle / 100 + 360) % 360;
-			if (diff > (double)pkg->speed*POINT_PER_PACK / 4500 * 3 / 2)
+			if (diff > (double)pkg->speed * static_cast<int>(POINT_PER_PACK) / 4500 * 3 / 2)
 			{
 				mErrorTimes++;
 			}
@@ -252,11 +252,10 @@ void LiPkg::ToLaserscan(std::vector<PointData> src)
   {
     float range = point.distance ;
     float angle = ANGLE_TO_RADIAN(point.angle);
-
-    int index = (int)((output.angle_max - angle) / output.angle_increment);
-    // int index = (int)((angle - output.angle_min) / output.angle_increment); //default, but this is inverted
-    if (index >= 0 && index < beam_size_)
+	float index_float = (output.angle_max - angle) / output.angle_increment;
+	if (index_float >= 0 && index_float < beam_size_)
     {
+		unsigned int index = static_cast<unsigned int>(index_float);
 		if(range < range_threshold_)
 		{
 			output.ranges[index] = std::numeric_limits<float>::quiet_NaN();
