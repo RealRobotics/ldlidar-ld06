@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.25)
 project(ldlidar)
 
 if(NOT CMAKE_CXX_STANDARD)
@@ -31,8 +31,10 @@ add_executable(ldlidar ${MAIN_SRC})
 target_include_directories(ldlidar PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(ldlidar sensor_msgs rclcpp)
-target_link_libraries(ldlidar udev)
+target_link_libraries(ldlidar
+  rclcpp::rclcpp
+  ${sensor_msgs_TARGETS}
+  udev)
 
 install(TARGETS ldlidar
   DESTINATION lib/${PROJECT_NAME})
